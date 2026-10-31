@@ -1,0 +1,235 @@
+{
+  "dataset": {
+    "name": "Cybersecurity Intrusion Detection Dataset",
+    "source_url": "https://www.kaggle.com/datasets/dnkumars/cybersecurity-intrusion-detection-dataset",
+    "license": "MIT",
+    "records": 9537,
+    "predictor_features": 9,
+    "features": [
+      "network_packet_size",
+      "login_attempts",
+      "session_duration",
+      "ip_reputation_score",
+      "failed_logins",
+      "unusual_time_access",
+      "protocol_type",
+      "encryption_used",
+      "browser_type"
+    ],
+    "feature_types": [
+      {
+        "name": "network_packet_size",
+        "type": "Numeric"
+      },
+      {
+        "name": "login_attempts",
+        "type": "Numeric"
+      },
+      {
+        "name": "session_duration",
+        "type": "Numeric"
+      },
+      {
+        "name": "ip_reputation_score",
+        "type": "Numeric"
+      },
+      {
+        "name": "failed_logins",
+        "type": "Numeric"
+      },
+      {
+        "name": "unusual_time_access",
+        "type": "Numeric"
+      },
+      {
+        "name": "protocol_type",
+        "type": "Categorical"
+      },
+      {
+        "name": "encryption_used",
+        "type": "Categorical"
+      },
+      {
+        "name": "browser_type",
+        "type": "Categorical"
+      }
+    ],
+    "target": "attack_detected",
+    "class_counts": {
+      "normal": 5273,
+      "attack": 4264
+    },
+    "missing_values": 0,
+    "duplicate_rows": 0,
+    "dataset_tagged_synthetic": true
+  },
+  "preprocessing": [
+    "Excluded session_id from model predictors to avoid identifier leakage.",
+    "Imputed numeric values with the training median and standardized them.",
+    "Imputed categorical values with the training mode and one-hot encoded them.",
+    "Used stratified sampling to preserve normal/attack proportions."
+  ],
+  "split": {
+    "method": "Stratified 80/20 train/test holdout",
+    "train_records": 7629,
+    "test_records": 1908,
+    "random_state": 42,
+    "selection_cv": "3-fold stratified cross-validation on training data",
+    "selection_rule": "Keep candidates within 0.01 mean attack F2 (beta=2, recall-weighted) of the training-CV leader; select the highest mean attack F1, then accuracy, then recall."
+  },
+  "selected_model": "Random Forest",
+  "probability_calibration": "Sigmoid calibration fitted with 3-fold stratified cross-validation on training data only.",
+  "model_selection_metric": "Attack F2 (beta=2; recall-weighted)",
+  "feature_importance": [
+    {
+      "name": "failed_logins",
+      "importance": 0.273419
+    },
+    {
+      "name": "ip_reputation_score",
+      "importance": 0.222062
+    },
+    {
+      "name": "login_attempts",
+      "importance": 0.218031
+    },
+    {
+      "name": "session_duration",
+      "importance": 0.105583
+    },
+    {
+      "name": "network_packet_size",
+      "importance": 0.097407
+    },
+    {
+      "name": "browser_type",
+      "importance": 0.044182
+    },
+    {
+      "name": "protocol_type",
+      "importance": 0.015327
+    },
+    {
+      "name": "encryption_used",
+      "importance": 0.01481
+    },
+    {
+      "name": "unusual_time_access",
+      "importance": 0.009179
+    }
+  ],
+  "comparison_note": "Classifier comparison test metrics use each uncalibrated candidate's default decision rule for a like-for-like comparison. Selected-model results above use the calibrated final model.",
+  "selected_cv": {
+    "attack_recall": 0.766931,
+    "attack_f1": 0.864842,
+    "attack_f2": 0.803294,
+    "accuracy": 0.892909
+  },
+  "test_metrics": {
+    "accuracy": 0.8826,
+    "precision": 0.978691,
+    "recall": 0.75381,
+    "f1": 0.851656,
+    "confusion_matrix": [
+      [
+        1041,
+        14
+      ],
+      [
+        210,
+        643
+      ]
+    ]
+  },
+  "comparison": [
+    {
+      "name": "Decision Tree",
+      "cv_attack_recall": 0.812079,
+      "cv_attack_f1": 0.802651,
+      "cv_attack_f2": 0.808255,
+      "cv_accuracy": 0.821602,
+      "accuracy": 0.820755,
+      "precision": 0.806723,
+      "recall": 0.787808,
+      "f1": 0.797153,
+      "confusion_matrix": [
+        [
+          894,
+          161
+        ],
+        [
+          181,
+          672
+        ]
+      ]
+    },
+    {
+      "name": "Random Forest",
+      "cv_attack_recall": 0.766931,
+      "cv_attack_f1": 0.864842,
+      "cv_attack_f2": 0.803294,
+      "cv_accuracy": 0.892909,
+      "accuracy": 0.88522,
+      "precision": 0.993769,
+      "recall": 0.747948,
+      "f1": 0.853512,
+      "confusion_matrix": [
+        [
+          1051,
+          4
+        ],
+        [
+          215,
+          638
+        ]
+      ]
+    },
+    {
+      "name": "SVM",
+      "cv_attack_recall": 0.771621,
+      "cv_attack_f1": 0.843585,
+      "cv_attack_f2": 0.798881,
+      "cv_accuracy": 0.872067,
+      "accuracy": 0.869497,
+      "precision": 0.949405,
+      "recall": 0.747948,
+      "f1": 0.836721,
+      "confusion_matrix": [
+        [
+          1021,
+          34
+        ],
+        [
+          215,
+          638
+        ]
+      ]
+    },
+    {
+      "name": "Logistic Regression",
+      "cv_attack_recall": 0.719437,
+      "cv_attack_f1": 0.705437,
+      "cv_attack_f2": 0.713746,
+      "cv_accuracy": 0.73142,
+      "accuracy": 0.716981,
+      "precision": 0.676437,
+      "recall": 0.7034,
+      "f1": 0.689655,
+      "confusion_matrix": [
+        [
+          768,
+          287
+        ],
+        [
+          253,
+          600
+        ]
+      ]
+    }
+  ],
+  "positive_class": "Attack (attack_detected = 1)",
+  "confusion_matrix_labels": [
+    "Normal",
+    "Attack"
+  ]
+}
